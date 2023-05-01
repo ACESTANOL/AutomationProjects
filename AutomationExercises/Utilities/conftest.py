@@ -1,13 +1,16 @@
 import pytest
 from selenium import webdriver
-import pytest_html
 
 
 @pytest.fixture(scope='session')
 def browser():
-    driver = webdriver.Chrome()
+    options = webdriver.ChromeOptions()
+    options.add_argument("--disable-popup-blocking")
+    options.add_argument("test-type")
+    driver = webdriver.Chrome(options=options)
     yield driver
     driver.quit()
+
 
 
 '''@pytest.hookimpl(hookwrapper=True)

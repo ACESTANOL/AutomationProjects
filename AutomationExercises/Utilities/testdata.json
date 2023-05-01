@@ -1,29 +1,46 @@
 {
   "valid": {
-    "user": "angelestanol0922@gmail.com",
-    "pwd": "@ng3L0920"
+    "user": "dddddd44444@gmail.com",
+    "pwd": "pass123"
   },
   "invalid": {
-    "user": "acestanol20@gmail.com",
+    "user": "xxxxxxxX@gmail.com",
     "pwd": "pass123"
   },
   "signup": {
-    "name": "angelica123456",
-    "email": "angelestanol09226@gmail.com"
+    "name": "angelica12345678",
+    "email": "angelestanol0922678@gmail.com"
   },
   "account_info": {
     "password": "@ng3L0920",
     "firstname": "Angelica",
     "lastname": "Estanol",
-    "company" : "CHEQ INC",
-    "add1" : "Blk 15 Lot 30 Rial St. Lores Country Homes",
-    "add2" : "Antipolo City",
+    "company": "CHEQ INC",
+    "add1": "Blk 15 Lot 30 Rial St. Lores Country Homes",
+    "add2": "Antipolo City",
     "state": "New Jersey",
-    "city" : "USA",
-    "zipcode" : "1870",
-    "mobile" : "09458839517"
+    "city": "USA",
+    "zipcode": "1870",
+    "mobile": "09458839517"
+  },
+  "contact_us": {
+    "name": "Angelica",
+    "email": "angel.112124@gmail.com",
+    "subject": "Subject Test",
+    "message": "This is sample message"
+  },
+   "search_products": {
+     "search": "Blue Top"
   }
 }
+
+
+
+
+
+
+
+
 
 
 

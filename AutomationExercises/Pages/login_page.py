@@ -3,11 +3,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from Utilities.common import LogFunc
-from Utilities.data import *
 from Utilities.config import *
 import os
 import time
-import datetime
 
 
 logger = LogFunc().get_log()
@@ -22,21 +20,24 @@ class LoginPage:
     # Login Info
     EMAIL_INPUT = (By.NAME, 'email')
     PASSWORD_INPUT = (By.NAME, 'password')
-    LOGIN_BUTTON = (By.XPATH, "//button[text()='Login']")
+    LOGIN_BUTTON = (By.XPATH, "//button[normalize-space()='Login']")
     INVALID_LOGIN = (By.XPATH, "//p[normalize-space()='Your email or password is incorrect!']")
+    USER_NAME = (By.LINK_TEXT, "Logged in")
     # Sign up Info
     NAME_INPUT = (By.NAME, "name")
     EMAIL_SIGNUP_INPUT = (By.XPATH, "//input[@data-qa='signup-email']")
     SIGNUP_BUTTON = (By.XPATH, "//button[text()='Signup']")
-    LOGIN_PAGE = (By.XPATH, "//a[normalize-space()='Signup / Login']")
     # Delete Account
     CREATE_ACCT_BTN = (By.XPATH, "//button[normalize-space()='Create Account']")
     CONT_BTN = (By.XPATH, "//a[normalize-space()='Continue']")
+    DELETED_MSG = (By.XPATH, "//b[normalize-space()='Account Deleted!']")
+    LOG_IN = (By.XPATH, "//a[normalize-space()='Signup / Login']")
+    DELETE = (By.XPATH, "//a[normalize-space()='Delete Account']")
+    LOG_IN_MSG = (By.XPATH, "//h2[normalize-space()='Login to your account']")
+    # Logout
+    LOG_OUT_LINK = (By.XPATH, "//a[normalize-space()='Logout']")
 
-    LOGOUT = (By.XPATH, "//a[normalize-space()='Logout']")
-
-    # #ELEMENTS##
-    # Login user with waiting of loading page
+    # ELEMENTS##
     def is_loaded(self):
         try:
             WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.LOGIN_BUTTON))
@@ -50,7 +51,7 @@ class LoginPage:
     def enter_password(self):
         return self.driver.find_element(*self.PASSWORD_INPUT)
 
-    def click_login(self):
+    def get_click_login(self):
         return self.driver.find_element(*self.LOGIN_BUTTON)
 
     def enter_name(self):
@@ -60,7 +61,16 @@ class LoginPage:
         return self.driver.find_element(*self.EMAIL_SIGNUP_INPUT)
 
     def get_invalid_login(self):
-        return self.driver.find_element(*self.INVALID_LOGIN)
+        return WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.INVALID_LOGIN))
+
+    def get_login_msg(self):
+        return self.driver.find_element(*self.LOG_IN_MSG)
+
+    def get_deleted_msg(self):
+        return self.driver.find_element(*self.DELETED_MSG)
+
+    def get_delete(self):
+        return self.driver.find_element(*self.DELETE)
 
     def deleted_account(self):
         return self.wait.until(EC.element_to_be_clickable(self.DELETE_ACCT_BTN))
@@ -68,14 +78,28 @@ class LoginPage:
     def deleted_account_btn(self):
         return self.wait.until(EC.element_to_be_clickable(self.CONT_DELETED_BTN))
 
+    def get_signup(self):
+        return self.wait.until(EC.element_to_be_clickable(self.SIGN_UP))
+
+    def get_login(self):
+        return self.driver.find_element(*self.LOG_IN)
+
+    def get_user_name(self):
+        return self.wait.until(EC.element_to_be_clickable(self.USER_NAME))
+
     def get_logout(self):
-        return self.driver.find_element(*self.LOGOUT)
+        return self.wait.until(EC.element_to_be_clickable(self.LOG_OUT_LINK))
 
     def get_title(self):
         return self.driver.title
 
     # #METHODS##
     # User Login Entry
+    def view_login_msg(self):
+        login_msg = self.get_login_msg().text
+        expected_message = 'Login to your account'
+        assert login_msg == expected_message, f"Expected: {expected_message}. Got: {login_msg}"
+
     def username_entry(self, userEntry):
         self.enter_email().send_keys(userEntry)
         logger.info(f'Username: {userEntry}')
@@ -97,16 +121,24 @@ class LoginPage:
         time.sleep(2)
 
     def click_button_invalid_login(self):
-        self.click_login()
-        time.sleep(2)
-        invalid_message = self.get_invalid_login().text
-        expected_message = validation_login.get('Invalid')
-        assert invalid_message == expected_message, f"Expected: {expected_message}. Got: {invalid_message}"
-        logger.info('Invalid credentials')
+        invalid_login = self.get_invalid_login().text
+        return invalid_login
+
+    def click_login(self):
+        log_in = self.get_login()
+        log_in.click()
 
     def click_login_button(self):
-        login_button = self.click_login()
+        login_button = self.get_click_login()
         login_button.click()
+
+    def click_deleted(self):
+        deleted = self.get_delete()
+        deleted.click()
+
+    def view_delete_msg(self):
+        delete_msg = self.get_deleted_msg().text
+        return delete_msg
 
     def click_cont_btn(self):
         login = self.cont_btn()
@@ -117,7 +149,14 @@ class LoginPage:
         login.click()
 
     def click_logout(self):
-        login = self.get_logout()
+        logout = self.get_logout()
+        logout.click()
+
+    def click_signup(self):
+        login = self.get_signup()
         login.click()
+
+
+
 
 
